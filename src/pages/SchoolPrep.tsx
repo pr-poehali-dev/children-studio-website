@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -7,7 +7,22 @@ import { Progress } from '@/components/ui/progress';
 import Icon from '@/components/ui/icon';
 import { Link } from 'react-router-dom';
 
-const tests = [
+const TESTS_API = 'https://functions.poehali.dev/3451c345-0cc9-41d4-b512-358c9d548458';
+
+interface Question {
+  question: string;
+  options: string[];
+  correct: number;
+}
+
+interface Test {
+  id: number;
+  title: string;
+  description: string;
+  questions: Question[];
+}
+
+const defaultTests = [
   {
     id: 1,
     title: 'Счёт до 10',
@@ -80,11 +95,31 @@ const tests = [
 ];
 
 export default function SchoolPrep() {
+  const [tests, setTests] = useState<Test[]>(defaultTests);
+  const [loading, setLoading] = useState(true);
   const [selectedTest, setSelectedTest] = useState<number | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
   const [showResult, setShowResult] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<string>('');
+
+  useEffect(() => {
+    fetchTests();
+  }, []);
+
+  const fetchTests = async () => {
+    try {
+      const response = await fetch(TESTS_API);
+      const data = await response.json();
+      if (data.length > 0) {
+        setTests(data);
+      }
+    } catch (error) {
+      console.error('Error fetching tests:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleTestSelect = (testId: number) => {
     setSelectedTest(testId);
@@ -151,28 +186,36 @@ export default function SchoolPrep() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {tests.map((test, index) => (
-              <Card
-                key={test.id}
-                className="cursor-pointer hover:scale-105 transition-all duration-300 border-4 animate-fade-in"
-                style={{ animationDelay: `${index * 0.1}s` }}
-                onClick={() => handleTestSelect(test.id)}
-              >
-                <CardHeader className="text-center pb-4">
-                  <div className="text-6xl mb-4 animate-bounce-gentle">{test.emoji}</div>
-                  <CardTitle className="text-2xl text-purple">{test.title}</CardTitle>
-                  <CardDescription className="text-base">{test.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full bg-gradient-to-r from-purple to-pink text-white hover:shadow-lg">
-                    Начать тест
-                    <Icon name="Play" className="ml-2" size={20} />
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          {loading ? (
+            <div className="text-center text-white text-xl">Загрузка тестов...</div>
+          ) : tests.length === 0 ? (
+            <div className="text-center text-white text-xl">
+              Тесты скоро появятся! 📚
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+              {tests.map((test, index) => (
+                <Card
+                  key={test.id}
+                  className="cursor-pointer hover:scale-105 transition-all duration-300 border-4 animate-fade-in"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                  onClick={() => handleTestSelect(test.id)}
+                >
+                  <CardHeader className="text-center pb-4">
+                    <div className="text-6xl mb-4 animate-bounce-gentle">📝</div>
+                    <CardTitle className="text-2xl text-purple">{test.title}</CardTitle>
+                    <CardDescription className="text-base">{test.description || 'Интересный тест для детей'}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Button className="w-full bg-gradient-to-r from-purple to-pink text-white hover:shadow-lg">
+                      Начать тест
+                      <Icon name="Play" className="ml-2" size={20} />
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
 
           <div className="mt-16 max-w-4xl mx-auto">
             <Card className="border-4 border-blue bg-white/95">

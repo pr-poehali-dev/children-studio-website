@@ -94,39 +94,32 @@ export default function FooterSection({ formData, setFormData, handleSubmit }: F
 
       <footer className="bg-purple text-white py-12">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8 text-center md:text-left">
+          <div className="grid md:grid-cols-2 gap-8 text-center md:text-left">
             <div>
-              <h3 className="text-2xl font-bold mb-4 text-yellow">Детская студия "Радуга"</h3>
-              <p className="text-white/80">Развиваем таланты с 2015 года 🌈</p>
+              <h3 className="text-2xl font-bold mb-4 text-yellow">Kinder Studio</h3>
+              <p className="text-white/80">Развиваем таланты и способности каждого ребёнка 🌈</p>
             </div>
             <div>
               <h4 className="font-bold mb-3 text-lg">Контакты</h4>
               <div className="space-y-2 text-white/80">
                 <p className="flex items-center gap-2 justify-center md:justify-start">
                   <Icon name="Phone" size={16} />
-                  +7 (999) 123-45-67
+                  8 960 620-44-29
                 </p>
                 <p className="flex items-center gap-2 justify-center md:justify-start">
-                  <Icon name="Mail" size={16} />
-                  info@raduga-studio.ru
+                  <Icon name="Send" size={16} />
+                  @Gaika_Z
                 </p>
                 <p className="flex items-center gap-2 justify-center md:justify-start">
                   <Icon name="MapPin" size={16} />
-                  г. Москва, ул. Солнечная, 15
+                  г. Белгород, с. Стрелецкое, Королева 38а
                 </p>
               </div>
             </div>
-            <div>
-              <h4 className="font-bold mb-3 text-lg">Режим работы</h4>
-              <div className="text-white/80 space-y-1">
-                <p>Пн-Пт: 9:00 - 20:00</p>
-                <p>Сб: 10:00 - 18:00</p>
-                <p>Вс: выходной</p>
-              </div>
-            </div>
+
           </div>
           <div className="border-t border-white/20 mt-8 pt-8 text-center text-white/60">
-            <p>© 2024 Детская студия "Радуга". Все права защищены.</p>
+            <p>© 2024 Kinder Studio. Все права защищены.</p>
           </div>
         </div>
       </footer>

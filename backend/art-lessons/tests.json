@@ -1,0 +1,28 @@
+{
+  "tests": [
+    {
+      "name": "Get art lessons",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": [],
+      "bodyMatcher": "type"
+    },
+    {
+      "name": "Create art lesson",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "date": "15 декабря 2024",
+        "topic": "Зимний пейзаж"
+      },
+      "expectedStatus": 201,
+      "expectedBody": {
+        "id": "number",
+        "date": "string",
+        "topic": "string"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

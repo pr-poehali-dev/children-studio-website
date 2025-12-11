@@ -3,11 +3,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
 
 const schedule = [
-  { day: 'Понедельник', lessons: ['Подготовка к школе (10:00)', 'ИЗО студия (15:00)', 'Английский язык (17:00)'] },
-  { day: 'Вторник', lessons: ['Танцы (10:00)', 'Шахматы (15:00)', 'Театр (17:00)'] },
-  { day: 'Среда', lessons: ['Подготовка к школе (10:00)', 'ИЗО студия (15:00)', 'Английский язык (17:00)'] },
-  { day: 'Четверг', lessons: ['Танцы (10:00)', 'Шахматы (15:00)', 'Театр (17:00)'] },
-  { day: 'Пятница', lessons: ['Подготовка к школе (10:00)', 'ИЗО студия (15:00)', 'Концерты (17:00)'] }
+  { day: 'Понедельник', lessons: ['Логопед (15:00 - 20:00)'] },
+  { day: 'Вторник', lessons: ['Подготовка к школе - 1 группа (18:00 - 18:50)', 'Подготовка к школе - 2 группа (19:00 - 19:50)'] },
+  { day: 'Среда', lessons: ['ИЗО - 1 группа (17:30 - 18:25)', 'ИЗО - 2 группа (18:30 - 19:25)'] },
+  { day: 'Четверг', lessons: ['Логопед (15:00 - 20:00)'] },
+  { day: 'Пятница', lessons: ['Подготовка к школе (19:00 - 20:00)'] },
+  { day: 'Суббота', lessons: ['Подготовка к школе (9:00 - 9:50)', 'Подготовка к школе (10:00 - 10:50)', 'ИЗО - 1 группа (11:10 - 12:10)', 'ИЗО - 2 группа (12:15 - 13:15)'] },
+  { day: 'Воскресенье', lessons: ['Гитара (12:00 - 12:40)', 'Гитара (12:50 - 13:30)'] }
 ];
 
 export default function ScheduleSection() {
@@ -21,7 +23,7 @@ export default function ScheduleSection() {
         <Card className="max-w-4xl mx-auto border-4">
           <CardContent className="p-0">
             <Tabs defaultValue="Понедельник" className="w-full">
-              <TabsList className="w-full grid grid-cols-5 rounded-none bg-gradient-to-r from-blue to-purple text-white h-auto">
+              <TabsList className="w-full grid grid-cols-7 rounded-none bg-gradient-to-r from-blue to-purple text-white h-auto">
                 {schedule.map((day) => (
                   <TabsTrigger
                     key={day.day}

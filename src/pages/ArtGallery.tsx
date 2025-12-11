@@ -1,61 +1,47 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import Icon from '@/components/ui/icon';
 import { Link } from 'react-router-dom';
 
-const artworks = [
-  {
-    id: 1,
-    date: '15 ноября 2024',
-    topic: 'Осенний лес',
-    images: [
-      { id: 1, author: 'Маша', color: 'bg-orange' },
-      { id: 2, author: 'Петя', color: 'bg-yellow' },
-      { id: 3, author: 'Аня', color: 'bg-green' },
-      { id: 4, author: 'Саша', color: 'bg-pink' }
-    ]
-  },
-  {
-    id: 2,
-    date: '22 ноября 2024',
-    topic: 'Морские жители',
-    images: [
-      { id: 5, author: 'Лёша', color: 'bg-blue' },
-      { id: 6, author: 'Катя', color: 'bg-purple' },
-      { id: 7, author: 'Денис', color: 'bg-blue' },
-      { id: 8, author: 'Оля', color: 'bg-green' }
-    ]
-  },
-  {
-    id: 3,
-    date: '29 ноября 2024',
-    topic: 'Зимняя сказка',
-    images: [
-      { id: 9, author: 'Вова', color: 'bg-blue' },
-      { id: 10, author: 'Лиза', color: 'bg-purple' },
-      { id: 11, author: 'Миша', color: 'bg-pink' },
-      { id: 12, author: 'Настя', color: 'bg-yellow' }
-    ]
-  },
-  {
-    id: 4,
-    date: '6 декабря 2024',
-    topic: 'Домашние животные',
-    images: [
-      { id: 13, author: 'Игорь', color: 'bg-orange' },
-      { id: 14, author: 'Вера', color: 'bg-pink' },
-      { id: 15, author: 'Коля', color: 'bg-green' },
-      { id: 16, author: 'Света', color: 'bg-purple' }
-    ]
-  }
-];
+const ART_LESSONS_API = 'https://functions.poehali.dev/39fe6f3d-5307-41de-aa71-3e2c57aec7f6';
+
+interface ArtWork {
+  id: number;
+  image_url: string;
+  author_name: string;
+}
+
+interface ArtLesson {
+  id: number;
+  date: string;
+  topic: string;
+  works: ArtWork[];
+}
 
 export default function ArtGallery() {
+  const [lessons, setLessons] = useState<ArtLesson[]>([]);
   const [selectedLesson, setSelectedLesson] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const selectedArtwork = artworks.find(a => a.id === selectedLesson);
+  useEffect(() => {
+    fetchLessons();
+  }, []);
+
+  const fetchLessons = async () => {
+    try {
+      const response = await fetch(ART_LESSONS_API);
+      const data = await response.json();
+      setLessons(data);
+    } catch (error) {
+      console.error('Error fetching lessons:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const selectedArtwork = lessons.find(l => l.id === selectedLesson);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple via-pink to-orange">
@@ -76,48 +62,68 @@ export default function ArtGallery() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-5xl mx-auto">
-          {artworks.map((artwork, index) => (
-            <Card
-              key={artwork.id}
-              className="cursor-pointer hover:scale-105 transition-all duration-300 border-4 animate-fade-in overflow-hidden"
-              style={{ animationDelay: `${index * 0.1}s` }}
-              onClick={() => setSelectedLesson(artwork.id)}
-            >
-              <CardHeader className="bg-gradient-to-r from-purple/20 to-pink/20">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="text-2xl text-purple">{artwork.topic}</CardTitle>
-                    <CardDescription className="text-base mt-1">
-                      <Icon name="Calendar" className="inline mr-1" size={16} />
-                      {artwork.date}
-                    </CardDescription>
-                  </div>
-                  <div className="text-4xl animate-float">🎨</div>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-6">
-                <div className="grid grid-cols-4 gap-2 mb-4">
-                  {artwork.images.slice(0, 4).map((img) => (
-                    <div
-                      key={img.id}
-                      className={`aspect-square ${img.color} rounded-lg flex items-center justify-center text-white text-xl font-bold hover:scale-110 transition-transform`}
-                    >
-                      🖼️
+        {loading ? (
+          <div className="text-center text-white text-xl">Загрузка...</div>
+        ) : lessons.length === 0 ? (
+          <div className="text-center text-white text-xl">
+            Пока нет уроков. Скоро здесь появятся работы! 🎨
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            {lessons.map((lesson, index) => (
+              <Card
+                key={lesson.id}
+                className="cursor-pointer hover:scale-105 transition-all duration-300 border-4 animate-fade-in overflow-hidden"
+                style={{ animationDelay: `${index * 0.1}s` }}
+                onClick={() => setSelectedLesson(lesson.id)}
+              >
+                <CardHeader className="bg-gradient-to-r from-purple/20 to-pink/20">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="text-2xl text-purple">{lesson.topic}</CardTitle>
+                      <CardDescription className="text-base mt-1">
+                        <Icon name="Calendar" className="inline mr-1" size={16} />
+                        {lesson.date}
+                      </CardDescription>
                     </div>
-                  ))}
-                </div>
-                <div className="flex items-center justify-between text-sm text-muted-foreground">
-                  <span className="flex items-center gap-1">
-                    <Icon name="Users" size={16} />
-                    {artwork.images.length} работ
-                  </span>
-                  <span className="text-purple font-semibold">Смотреть →</span>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                    <div className="text-4xl animate-float">🎨</div>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-6">
+                  {lesson.works.length > 0 ? (
+                    <>
+                      <div className="grid grid-cols-4 gap-2 mb-4">
+                        {lesson.works.slice(0, 4).map((work) => (
+                          <div
+                            key={work.id}
+                            className="aspect-square rounded-lg overflow-hidden hover:scale-110 transition-transform"
+                          >
+                            <img
+                              src={work.image_url}
+                              alt={work.author_name}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      <div className="flex items-center justify-between text-sm text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          <Icon name="Users" size={16} />
+                          {lesson.works.length} работ
+                        </span>
+                        <span className="text-purple font-semibold">Смотреть →</span>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-center text-muted-foreground py-8">
+                      Работы скоро появятся
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
 
         <div className="mt-16 max-w-4xl mx-auto">
           <Card className="border-4 border-yellow bg-white/95">
@@ -188,18 +194,26 @@ export default function ArtGallery() {
                   {selectedArtwork.date}
                 </p>
               </DialogHeader>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-                {selectedArtwork.images.map((img) => (
-                  <div key={img.id} className="space-y-2">
-                    <div
-                      className={`aspect-square ${img.color} rounded-xl flex items-center justify-center text-white text-5xl hover:scale-105 transition-transform cursor-pointer shadow-lg`}
-                    >
-                      🖼️
+              {selectedArtwork.works.length > 0 ? (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+                  {selectedArtwork.works.map((work) => (
+                    <div key={work.id} className="space-y-2">
+                      <div className="aspect-square rounded-xl overflow-hidden hover:scale-105 transition-transform cursor-pointer shadow-lg">
+                        <img
+                          src={work.image_url}
+                          alt={work.author_name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <p className="text-center font-semibold text-purple">{work.author_name}</p>
                     </div>
-                    <p className="text-center font-semibold text-purple">{img.author}</p>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center text-muted-foreground py-8">
+                  Работы скоро появятся
+                </div>
+              )}
             </>
           )}
         </DialogContent>

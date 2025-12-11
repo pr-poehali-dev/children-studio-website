@@ -1,0 +1,35 @@
+{
+  "tests": [
+    {
+      "name": "Get active tests",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": [],
+      "bodyMatcher": "type"
+    },
+    {
+      "name": "Create test",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "title": "Счёт до 10",
+        "description": "Тест на математику",
+        "questions": [
+          {
+            "question": "Сколько будет 2+2?",
+            "options": ["3", "4", "5"],
+            "correct": 1
+          }
+        ]
+      },
+      "expectedStatus": 201,
+      "expectedBody": {
+        "id": "number",
+        "title": "string",
+        "questions": "object"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

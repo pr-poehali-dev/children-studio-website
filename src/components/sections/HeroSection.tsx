@@ -18,20 +18,23 @@ interface HeroSectionProps {
 
 export default function HeroSection({ formData, setFormData, handleSubmit }: HeroSectionProps) {
   return (
-    <section className="bg-gradient-to-br from-purple via-pink to-orange min-h-screen flex items-center justify-center relative overflow-hidden">
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 left-20 text-9xl animate-float">⭐</div>
-        <div className="absolute top-40 right-20 text-9xl animate-bounce-gentle" style={{ animationDelay: '0.5s' }}>🎨</div>
-        <div className="absolute bottom-20 left-40 text-9xl animate-float" style={{ animationDelay: '1s' }}>🎓</div>
-        <div className="absolute bottom-40 right-40 text-9xl animate-bounce-gentle" style={{ animationDelay: '1.5s' }}>✨</div>
+    <section className="bg-gradient-to-b from-blue-400 via-blue-300 to-blue-200 min-h-screen flex items-center justify-center relative overflow-hidden">
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-10 left-10 text-8xl animate-float">☁️</div>
+        <div className="absolute top-20 right-20 text-7xl animate-float" style={{ animationDelay: '0.3s' }}>☁️</div>
+        <div className="absolute top-40 left-1/4 text-6xl animate-float" style={{ animationDelay: '0.6s' }}>☁️</div>
+        <div className="absolute bottom-32 right-1/3 text-7xl animate-float" style={{ animationDelay: '0.9s' }}>☁️</div>
+        <div className="absolute top-24 left-1/3 text-6xl animate-bounce-gentle">🦋</div>
+        <div className="absolute top-32 right-1/4 text-7xl animate-float" style={{ animationDelay: '1s' }}>🐦</div>
+        <div className="absolute bottom-40 left-20 text-6xl animate-bounce-gentle" style={{ animationDelay: '1.3s' }}>🦉</div>
+        <div className="absolute top-1/2 right-10 text-5xl animate-float" style={{ animationDelay: '1.6s' }}>🐝</div>
+        <div className="absolute bottom-20 right-1/2 text-6xl animate-bounce-gentle" style={{ animationDelay: '1.9s' }}>🦜</div>
       </div>
 
       <div className="container mx-auto px-4 py-20 relative z-10">
         <div className="text-center animate-fade-in">
           <h1 className="text-6xl md:text-8xl font-bold text-white mb-6 drop-shadow-2xl">
-            Детская студия
-            <br />
-            <span className="text-yellow">"Радуга"</span>
+            <span className="text-yellow">Kinder Studio</span>
           </h1>
           <p className="text-2xl md:text-3xl text-white/90 mb-8 max-w-3xl mx-auto">
             Развиваем таланты и раскрываем потенциал каждого ребёнка! 🌈
