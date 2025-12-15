@@ -10,59 +10,95 @@ import { Link } from 'react-router-dom';
 const programs = [
   {
     id: 1,
+    title: 'Логопед',
+    icon: '🗣️',
+    description: 'Развитие речи и коррекция произношения',
+    age: 'с 2 лет',
+    format: 'индивидуально',
+    color: 'from-blue to-green',
+    features: ['Постановка звуков', 'Развитие речи', 'Артикуляция', 'Логопедический массаж']
+  },
+  {
+    id: 2,
     title: 'Подготовка к школе',
     icon: '🎓',
     description: 'Комплексная подготовка для будущих первоклассников',
-    age: '5-7 лет',
+    age: 'с 4 лет',
+    format: 'групповые и индивидуальные',
     color: 'from-yellow to-orange',
     features: ['Обучение чтению', 'Математика', 'Развитие речи', 'Логика'],
     link: '/school-prep'
   },
   {
-    id: 2,
+    id: 3,
+    title: 'Фортепиано',
+    icon: '🎹',
+    description: 'Обучение игре на фортепиано',
+    age: 'с 5 лет',
+    format: 'индивидуально',
+    color: 'from-pink to-purple',
+    features: ['Основы музыки', 'Техника игры', 'Репертуар', 'Выступления']
+  },
+  {
+    id: 4,
+    title: 'Гитара',
+    icon: '🎸',
+    description: 'Игра на гитаре для начинающих и продвинутых',
+    age: 'с 6 лет',
+    format: 'индивидуально',
+    color: 'from-green to-blue',
+    features: ['Аккорды', 'Бой и перебор', 'Популярные песни', 'Импровизация']
+  },
+  {
+    id: 5,
+    title: 'Вокал',
+    icon: '🎤',
+    description: 'Постановка голоса и сценическое мастерство',
+    age: 'с 4 лет',
+    format: 'индивидуально',
+    color: 'from-orange to-pink',
+    features: ['Вокальная техника', 'Дыхание', 'Артистизм', 'Концерты']
+  },
+  {
+    id: 6,
     title: 'ИЗО',
     icon: '🎨',
     description: 'Творчество, рисование, развитие художественного вкуса',
-    age: '4-12 лет',
+    age: 'с 4 лет',
+    format: 'групповые и индивидуальные',
     color: 'from-purple to-pink',
     features: ['Акварель', 'Гуашь', 'Карандаши', 'Аппликация'],
     link: '/art-gallery'
   },
   {
-    id: 3,
-    title: 'Логопед',
-    icon: '🗣️',
-    description: 'Развитие речи и коррекция произношения',
-    age: '3-10 лет',
-    color: 'from-blue to-green',
-    features: ['Постановка звуков', 'Развитие речи', 'Артикуляция', 'Логопедический массаж']
+    id: 7,
+    title: 'Раннее общее развитие',
+    icon: '🌟',
+    description: 'Комплексное развитие для самых маленьких',
+    age: 'с 3 лет',
+    format: 'групповые',
+    color: 'from-cyan to-blue',
+    features: ['Моторика', 'Внимание', 'Память', 'Социализация']
   },
   {
-    id: 4,
-    title: 'Фортепиано',
-    icon: '🎹',
-    description: 'Обучение игре на фортепиано',
-    age: '5-14 лет',
-    color: 'from-pink to-purple',
-    features: ['Основы музыки', 'Техника игры', 'Репертуар', 'Выступления']
+    id: 8,
+    title: 'Хоровое пение',
+    icon: '🎶',
+    description: 'Пение в хоре, работа в команде',
+    age: 'с 4 лет',
+    format: 'групповые',
+    color: 'from-rose to-pink',
+    features: ['Хоровое пение', 'Ансамбли', 'Концерты', 'Музыкальность']
   },
   {
-    id: 5,
-    title: 'Гитара',
-    icon: '🎸',
-    description: 'Игра на гитаре для начинающих и продвинутых',
-    age: '7-16 лет',
-    color: 'from-green to-blue',
-    features: ['Аккорды', 'Бой и перебор', 'Популярные песни', 'Импровизация']
-  },
-  {
-    id: 6,
-    title: 'Вокал',
-    icon: '🎤',
-    description: 'Постановка голоса и сценическое мастерство',
-    age: '5-16 лет',
-    color: 'from-orange to-pink',
-    features: ['Вокальная техника', 'Дыхание', 'Артистизм', 'Концерты']
+    id: 9,
+    title: 'Репетитор начальных классов',
+    icon: '📚',
+    description: 'Помощь школьникам 1-4 классов',
+    age: '1-4 класс',
+    format: 'индивидуально',
+    color: 'from-indigo to-purple',
+    features: ['Математика', 'Русский язык', 'Чтение', 'Окружающий мир']
   }
 ];
 
@@ -100,10 +136,15 @@ export default function ProgramsSection({ formData, setFormData, handleSubmit }:
                 <div className="text-6xl mb-3 text-center animate-bounce-gentle">{program.icon}</div>
                 <CardTitle className="text-2xl text-center text-purple">{program.title}</CardTitle>
                 <CardDescription className="text-center text-base">
-                  <span className="inline-flex items-center gap-1 bg-muted px-3 py-1 rounded-full mt-2">
-                    <Icon name="Users" size={14} />
-                    {program.age}
-                  </span>
+                  <div className="flex flex-col gap-2 mt-2 items-center">
+                    <span className="inline-flex items-center gap-1 bg-muted px-3 py-1 rounded-full">
+                      <Icon name="Users" size={14} />
+                      {program.age}
+                    </span>
+                    <span className="inline-flex items-center gap-1 bg-primary/10 px-3 py-1 rounded-full text-primary text-sm font-medium">
+                      {program.format}
+                    </span>
+                  </div>
                 </CardDescription>
               </CardHeader>
               <CardContent>

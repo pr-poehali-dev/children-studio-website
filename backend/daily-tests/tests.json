@@ -1,0 +1,19 @@
+{
+  "tests": [
+    {
+      "name": "Get daily test",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "0": {
+          "id": "number",
+          "title": "string",
+          "description": "string",
+          "questions": "array"
+        }
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

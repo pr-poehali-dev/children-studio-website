@@ -7,7 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import Icon from '@/components/ui/icon';
 import { Link } from 'react-router-dom';
 
-const TESTS_API = 'https://functions.poehali.dev/3451c345-0cc9-41d4-b512-358c9d548458';
+const TESTS_API = 'https://functions.poehali.dev/c6ad1d9e-5b34-4575-8ecd-7a35c480a199';
 
 interface Question {
   question: string;

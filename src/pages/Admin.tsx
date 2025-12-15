@@ -207,7 +207,7 @@ export default function Admin() {
             <Card>
               <CardHeader>
                 <CardTitle>Загрузить работы учеников</CardTitle>
-                <CardDescription>Добавьте фотографии работ к уроку</CardDescription>
+                <CardDescription>Добавьте фотографии работ к уроку (можно загружать по одной)</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
@@ -237,6 +237,20 @@ export default function Admin() {
                     accept="image/*"
                     onChange={handleImageUpload}
                   />
+                  <p className="text-sm text-muted-foreground mt-2">
+                    ✅ После загрузки можно сразу выбрать следующее фото и загрузить ещё раз
+                  </p>
+                </div>
+                <div className="bg-blue/10 p-4 rounded-lg border-2 border-blue">
+                  <h4 className="font-semibold text-blue mb-2">📌 Инструкция:</h4>
+                  <ol className="text-sm space-y-1 list-decimal list-inside">
+                    <li>Создайте урок выше и запомните его ID</li>
+                    <li>Введите ID урока в поле выше</li>
+                    <li>Введите имя ученика</li>
+                    <li>Выберите фото работы</li>
+                    <li>Фото загрузится автоматически</li>
+                    <li>Чтобы добавить ещё одну работу - просто выберите новое фото</li>
+                  </ol>
                 </div>
               </CardContent>
             </Card>
