@@ -36,8 +36,10 @@ export default function HeroSection({ formData, setFormData, handleSubmit }: Her
           <h1 className="text-6xl md:text-8xl font-bold text-white mb-6 drop-shadow-2xl">
             <span className="text-yellow">Kinder Studio</span>
           </h1>
-          <p className="text-2xl md:text-3xl mb-8 max-w-3xl mx-auto bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500 bg-clip-text text-transparent font-bold drop-shadow-lg">
-            Развиваем таланты и раскрываем потенциал каждого ребёнка! 🌈
+          <p className="text-2xl md:text-3xl mb-8 max-w-3xl mx-auto font-bold">
+            <span className="bg-gradient-to-r from-red-500 via-yellow-400 via-green-500 via-blue-500 to-purple-600 bg-clip-text text-transparent animate-pulse" style={{ animationDuration: '3s' }}>
+              Развиваем таланты и раскрываем потенциал каждого ребёнка! 🌈
+            </span>
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Dialog>
