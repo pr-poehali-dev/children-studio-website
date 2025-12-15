@@ -36,7 +36,7 @@ export default function HeroSection({ formData, setFormData, handleSubmit }: Her
           <h1 className="text-6xl md:text-8xl font-bold text-white mb-6 drop-shadow-2xl">
             <span className="text-yellow">Kinder Studio</span>
           </h1>
-          <p className="text-2xl md:text-3xl text-white/90 mb-8 max-w-3xl mx-auto">
+          <p className="text-2xl md:text-3xl mb-8 max-w-3xl mx-auto bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500 bg-clip-text text-transparent font-bold drop-shadow-lg">
             Развиваем таланты и раскрываем потенциал каждого ребёнка! 🌈
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
