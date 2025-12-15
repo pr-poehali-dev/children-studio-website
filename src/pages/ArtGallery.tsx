@@ -55,11 +55,50 @@ export default function ArtGallery() {
   };
 
   const handlePasswordCheck = () => {
-    if (password === 'kinder2024') {
+    if (password === '2468') {
       setIsAuthenticated(true);
       toast.success('Доступ разрешён! 🔓');
     } else {
       toast.error('Неверный пароль');
+    }
+  };
+
+  const handleDeleteWork = async (workId: number) => {
+    if (!confirm('Удалить эту работу?')) return;
+
+    try {
+      const response = await fetch(`${ART_WORKS_API}?id=${workId}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        toast.success('Работа удалена');
+        fetchLessons();
+      } else {
+        toast.error('Ошибка при удалении');
+      }
+    } catch (error) {
+      toast.error('Ошибка при удалении');
+    }
+  };
+
+  const handleDeleteLesson = async (lessonId: number) => {
+    if (!confirm('Удалить весь урок со всеми работами?')) return;
+
+    try {
+      const response = await fetch(`${ART_LESSONS_API}?id=${lessonId}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        toast.success('Урок удалён');
+        setSelectedLesson(null);
+        fetchLessons();
+      } else {
+        toast.error('Ошибка при удалении');
+      }
+    } catch (error) {
+      toast.error('Ошибка при удалении');
     }
   };
 
@@ -342,25 +381,52 @@ export default function ArtGallery() {
           {selectedArtwork && (
             <>
               <DialogHeader>
-                <DialogTitle className="text-3xl text-purple flex items-center gap-3">
-                  <span className="text-4xl">🎨</span>
-                  {selectedArtwork.topic}
-                </DialogTitle>
-                <p className="text-muted-foreground flex items-center gap-2 mt-2">
-                  <Icon name="Calendar" size={16} />
-                  {selectedArtwork.date}
-                </p>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <DialogTitle className="text-3xl text-purple flex items-center gap-3">
+                      <span className="text-4xl">🎨</span>
+                      {selectedArtwork.topic}
+                    </DialogTitle>
+                    <p className="text-muted-foreground flex items-center gap-2 mt-2">
+                      <Icon name="Calendar" size={16} />
+                      {selectedArtwork.date}
+                    </p>
+                  </div>
+                  {isAuthenticated && (
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleDeleteLesson(selectedArtwork.id)}
+                    >
+                      <Icon name="Trash2" className="mr-1" size={16} />
+                      Удалить урок
+                    </Button>
+                  )}
+                </div>
               </DialogHeader>
               {selectedArtwork.works.length > 0 ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
                   {selectedArtwork.works.map((work) => (
                     <div key={work.id} className="space-y-2">
-                      <div className="aspect-square rounded-xl overflow-hidden hover:scale-105 transition-transform cursor-pointer shadow-lg">
+                      <div className="aspect-square rounded-xl overflow-hidden hover:scale-105 transition-transform cursor-pointer shadow-lg relative group">
                         <img
                           src={work.image_url}
                           alt={work.author_name}
                           className="w-full h-full object-cover"
                         />
+                        {isAuthenticated && (
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteWork(work.id);
+                            }}
+                          >
+                            <Icon name="Trash2" size={14} />
+                          </Button>
+                        )}
                       </div>
                       <p className="text-center font-semibold text-purple">{work.author_name}</p>
                     </div>

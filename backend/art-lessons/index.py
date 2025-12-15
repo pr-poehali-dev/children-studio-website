@@ -9,6 +9,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
     Управление уроками ИЗО и работами учеников
     GET: получить все уроки с работами
     POST: создать новый урок
+    DELETE: удалить урок со всеми работами
     '''
     method: str = event.get('httpMethod', 'GET')
     
@@ -17,7 +18,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             'statusCode': 200,
             'headers': {
                 'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+                'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type',
                 'Access-Control-Max-Age': '86400'
             },
@@ -88,6 +89,33 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                         'Access-Control-Allow-Origin': '*'
                     },
                     'body': json.dumps(dict(lesson), default=str),
+                    'isBase64Encoded': False
+                }
+        
+        elif method == 'DELETE':
+            params = event.get('queryStringParameters', {})
+            lesson_id = params.get('id')
+            
+            if not lesson_id:
+                return {
+                    'statusCode': 400,
+                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'id parameter required'}),
+                    'isBase64Encoded': False
+                }
+            
+            with conn.cursor() as cur:
+                cur.execute('DELETE FROM art_works WHERE lesson_id = %s', (lesson_id,))
+                cur.execute('DELETE FROM art_lessons WHERE id = %s', (lesson_id,))
+                conn.commit()
+                
+                return {
+                    'statusCode': 200,
+                    'headers': {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    'body': json.dumps({'message': 'Lesson deleted'}),
                     'isBase64Encoded': False
                 }
         
