@@ -135,17 +135,15 @@ export default function ProgramsSection({ formData, setFormData, handleSubmit }:
               <CardHeader>
                 <div className="text-6xl mb-3 text-center animate-bounce-gentle">{program.icon}</div>
                 <CardTitle className="text-2xl text-center text-purple">{program.title}</CardTitle>
-                <CardDescription className="text-center text-base">
-                  <div className="flex flex-col gap-2 mt-2 items-center">
-                    <span className="inline-flex items-center gap-1 bg-muted px-3 py-1 rounded-full">
-                      <Icon name="Users" size={14} />
-                      {program.age}
-                    </span>
-                    <span className="inline-flex items-center gap-1 bg-primary/10 px-3 py-1 rounded-full text-primary text-sm font-medium">
-                      {program.format}
-                    </span>
-                  </div>
-                </CardDescription>
+                <div className="flex flex-col gap-2 mt-2 items-center">
+                  <span className="inline-flex items-center gap-1 bg-muted px-3 py-1 rounded-full text-sm text-muted-foreground">
+                    <Icon name="Users" size={14} />
+                    {program.age}
+                  </span>
+                  <span className="inline-flex items-center gap-1 bg-primary/10 px-3 py-1 rounded-full text-primary text-sm font-medium">
+                    {program.format}
+                  </span>
+                </div>
               </CardHeader>
               <CardContent>
                 <p className="text-center mb-4 text-muted-foreground">{program.description}</p>
