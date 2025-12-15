@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import Icon from '@/components/ui/icon';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
 
 const ART_LESSONS_API = 'https://functions.poehali.dev/39fe6f3d-5307-41de-aa71-3e2c57aec7f6';
+const ART_WORKS_API = 'https://functions.poehali.dev/54fa90a2-438b-44e7-ad97-edce352f7d34';
 
 interface ArtWork {
   id: number;
@@ -24,6 +28,15 @@ export default function ArtGallery() {
   const [lessons, setLessons] = useState<ArtLesson[]>([]);
   const [selectedLesson, setSelectedLesson] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showAddDialog, setShowAddDialog] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
+  const [newWork, setNewWork] = useState({
+    topic: '',
+    date: '',
+    authorName: '',
+    image: null as string | null
+  });
 
   useEffect(() => {
     fetchLessons();
@@ -38,6 +51,74 @@ export default function ArtGallery() {
       console.error('Error fetching lessons:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePasswordCheck = () => {
+    if (password === 'kinder2024') {
+      setIsAuthenticated(true);
+      toast.success('Доступ разрешён! 🔓');
+    } else {
+      toast.error('Неверный пароль');
+    }
+  };
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setNewWork({ ...newWork, image: reader.result as string });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSubmitWork = async () => {
+    if (!newWork.topic || !newWork.date || !newWork.authorName || !newWork.image) {
+      toast.error('Заполните все поля и выберите фото');
+      return;
+    }
+
+    try {
+      // Создаем урок
+      const lessonResponse = await fetch(ART_LESSONS_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          date: newWork.date,
+          topic: newWork.topic
+        })
+      });
+
+      if (!lessonResponse.ok) {
+        toast.error('Ошибка при создании урока');
+        return;
+      }
+
+      const lessonData = await lessonResponse.json();
+
+      // Загружаем работу
+      const workResponse = await fetch(ART_WORKS_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          lesson_id: lessonData.id,
+          author_name: newWork.authorName,
+          image: newWork.image
+        })
+      });
+
+      if (workResponse.ok) {
+        toast.success('Работа добавлена! 🎨');
+        setShowAddDialog(false);
+        setNewWork({ topic: '', date: '', authorName: '', image: null });
+        fetchLessons();
+      } else {
+        toast.error('Ошибка при загрузке работы');
+      }
+    } catch (error) {
+      toast.error('Ошибка при добавлении работы');
     }
   };
 
@@ -57,9 +138,85 @@ export default function ArtGallery() {
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 drop-shadow-lg">
             Галерея ИЗО 🎨
           </h1>
-          <p className="text-xl text-white/90 max-w-2xl mx-auto">
+          <p className="text-xl text-white/90 max-w-2xl mx-auto mb-6">
             Работы наших юных художников после каждого занятия
           </p>
+          
+          <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+            <DialogTrigger asChild>
+              <Button size="lg" className="bg-white text-purple hover:bg-white/90 shadow-xl">
+                <Icon name="Plus" className="mr-2" size={20} />
+                Добавить работу
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle className="text-2xl text-purple">Добавить работу</DialogTitle>
+              </DialogHeader>
+              
+              {!isAuthenticated ? (
+                <div className="space-y-4 mt-4">
+                  <div>
+                    <Label htmlFor="password">Введите пароль</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Пароль администратора"
+                    />
+                  </div>
+                  <Button onClick={handlePasswordCheck} className="w-full bg-gradient-to-r from-purple to-pink text-white">
+                    <Icon name="Lock" className="mr-2" size={20} />
+                    Войти
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-4 mt-4">
+                  <div>
+                    <Label htmlFor="topic">Тема занятия</Label>
+                    <Input
+                      id="topic"
+                      value={newWork.topic}
+                      onChange={(e) => setNewWork({ ...newWork, topic: e.target.value })}
+                      placeholder="Например: Зимний пейзаж"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="date">Дата занятия</Label>
+                    <Input
+                      id="date"
+                      value={newWork.date}
+                      onChange={(e) => setNewWork({ ...newWork, date: e.target.value })}
+                      placeholder="Например: 15 декабря 2024"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="author">Имя и фамилия ребёнка</Label>
+                    <Input
+                      id="author"
+                      value={newWork.authorName}
+                      onChange={(e) => setNewWork({ ...newWork, authorName: e.target.value })}
+                      placeholder="Например: Маша Иванова"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="photo">Фото работы</Label>
+                    <Input
+                      id="photo"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageSelect}
+                    />
+                  </div>
+                  <Button onClick={handleSubmitWork} className="w-full bg-gradient-to-r from-purple to-pink text-white">
+                    <Icon name="Upload" className="mr-2" size={20} />
+                    Загрузить работу
+                  </Button>
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
         </div>
 
         {loading ? (
